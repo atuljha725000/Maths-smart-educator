@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Solver Pro | NCERT 2020 Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Noto+Serif+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --bg-dark: #020617;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-bright: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --gold: #fbbf24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-dark); min-height: 100vh; color: var(--text-bright); overflow-x: hidden; }
+
+        /* Enhanced Background */
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
+            z-index: -2;
+        }
+
+        .bg-glow { position: fixed; width: 600px; height: 600px; background: var(--accent); filter: blur(150px); opacity: 0.1; border-radius: 50%; z-index: -1; animation: float 20s infinite alternate; }
+        @keyframes float { 0% { transform: translate(-20%, -20%) scale(1); } 100% { transform: translate(40%, 40%) scale(1.2); } }
+
+        .page-view { display: none; width: 100%; max-width: 1200px; margin: 0 auto; padding: 40px 20px; z-index: 10; animation: fadeIn 0.6s ease-out; }
+        .page-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Landing Page Specifics */
+        .landing-container { display: flex; flex-direction: column; gap: 30px; }
+        .hero-section { 
+            background: var(--glass); 
+            backdrop-filter: blur(30px); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 40px; 
+            padding: 60px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .shlok-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            margin-top: 20px;
+        }
+        .shlok-hindi { 
+            font-family: 'Noto Serif Devanagari', serif; 
+            font-size: 1.8rem; 
+            color: var(--gold); 
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .shlok-trans { font-style: italic; color: var(--text-dim); font-size: 0.95rem; }
+
+        .motivation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .moto-item {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+        .moto-item i { font-size: 2rem; color: var(--accent); margin-bottom: 15px; }
+        .moto-item h3 { margin-bottom: 10px; font-size: 1.1rem; }
+        .moto-item p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+
+        /* Legacy Compatibility */
+        .glass-card { background: var(--glass); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-radius: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); overflow: hidden; }
+        .auth-container { max-width: 450px; margin: 100px auto; padding: 50px; }
+        .input-box { width: 100%; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); border-radius: 12px; color: white; padding: 14px; margin-bottom: 20px; outline: none; }
+        .dash-grid { padding: 40px; }
+        .selection-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        select, textarea { width: 100%; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); border-radius: 12px; color: white; padding: 14px; outline: none; cursor: pointer; }
+        label { display: block; margin-bottom: 6px; font-size: 10px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .main-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .main-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--accent-glow); }
+        .question-preview { background: rgba(99,102,241,0.1); padding: 20px; border-radius: 15px; margin-top: 15px; border: 1px solid var(--accent); font-size: 15px; line-height: 1.7; color: #e2e8f0; white-space: pre-wrap; }
+        .solution-box { margin-top: 20px; padding: 25px; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); border-radius: 20px; }
+        .hidden { display: none !important; }
+        .badge { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; padding: 5px 12px; border-radius: 100px; font-size: 10px; font-weight: 700; text-transform: uppercase; display: inline-block; margin-bottom: 15px; cursor: pointer; }
+        .admin-item { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--glass-border); }
+        .not-found-section { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--glass-border); }
+        .toggle-link { color: var(--text-dim); font-size: 13px; text-decoration: underline; cursor: pointer; }
+        .upload-area { margin-top: 15px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 15px; border: 1px solid var(--glass-border); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+    <div class="bg-glow"></div>
+
+    <div id="landingView" class="page-view active">
+        <div class="landing-container">
+            <div class="hero-section">
+                <div class="content">
+                    <span class="badge" style="letter-spacing: 2px;">Vedic Wisdom x Modern Logic</span>
+                    <h1 style="font-size: 3.5rem; line-height: 1.1; margin-bottom: 20px; font-weight: 800;">Master <br><span style="color: var(--accent);">Mathematics.</span></h1>
+                    <p style="color: var(--text-dim); margin-bottom: 30px; font-size: 1.1rem;">Access the complete NCERT Class 10 Archive with expert-curated solutions and step-by-step guidance.</p>
+                    <button onclick="switchView('authView')" class="main-btn" style="max-width: 280px; font-size: 1.1rem;">
+                        Get Started <i class="fa-solid fa-rocket"></i>
+                    </button>
+                </div>
+                <div style="text-align: center;">
+                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/online-math-class-illustration-download-in-svg-png-gif-file-formats--formula-calculation-education-and-school-pack-illustrations-5211247.png" style="width: 100%; filter: drop-shadow(0 0 30px var(--accent-glow));">
+                </div>
+            </div>
+
+            <div class="shlok-card">
+                <div class="shlok-hindi">न हि ज्ञानेन सदृशं पवित्रमिह विद्यते ।<br>तत्स्वयं योगसंसिद्धः कालेनात्मनि विन्दति ॥</div>
+                <div class="shlok-trans">"In this world, there is nothing so purifying as knowledge. One who has attained purity of mind through prolonged practice of Yoga finds such knowledge within in due course of time." <br><strong>— Bhagavad Gita 4.38</strong></div>
+            </div>
+
+            <div class="motivation-grid">
+                <div class="moto-item">
+                    <i class="fa-solid fa-infinity"></i>
+                    <h3>Infinite Heritage</h3>
+                    <p>From Aryabhata's 'Zero' to Ramanujan's 'Infinity', math is in our DNA. Pursue it with pride.</p>
+                </div>
+                <div class="moto-item">
+                    <i class="fa-solid fa-brain"></i>
+                    <h3>Pure Logic</h3>
+                    <p>Mathematics is the music of reason. It sharpens the mind and builds the foundation of the future.</p>
+                </div>
+                <div class="moto-item">
+                    <i class="fa-solid fa-bullseye"></i>
+                    <h3>Clear Vision</h3>
+                    <p>Focus on the method, and the result will follow. Every complex problem is just a series of small steps.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="authView" class="page-view">
+        <div class="glass-card auth-container">
+              <span class="badge" onclick="showAdmin()">NCERT 2020 Complete Series</span>
+            <h2 style="text-align: center; margin-bottom: 30px;">Student Login</h2>
+            <form onsubmit="handleAuth(event)">
+                <label>Username</label>
+                <input type="text" id="userName" class="input-box" placeholder="Your name" required>
+                <label>Password</label>
+                <input type="password" class="input-box" placeholder="••••••••" required>
+                <button type="submit" class="main-btn">Access Database</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboardView" class="page-view">
+        <div class="glass-card dash-grid">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+                <div>
+                    <h2 id="welcomeMsg">Chapter Navigator</h2>
+                </div>
+                <button onclick="location.reload()" style="background:none; border:none; color:var(--text-dim); cursor:pointer;">Logout</button>
+            </div>
+
+            <form onsubmit="handleStudentSubmit(event)">
+                <div class="selection-grid">
+                    <div>
+                        <label>Select Chapter</label>
+                        <select id="chapterSelect" onchange="loadExercises()" required></select>
+                    </div>
+                    <div>
+                        <label>Select Exercise</label>
+                        <select id="exSelect" onchange="loadQuestions()" required>
+                            <option value="">Choose Chapter</option>
+                        </select>
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <label>Select Question</label>
+                        <select id="qSelect" onchange="showPreview()" required>
+                            <option value="">Choose Exercise</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="previewBox" class="question-preview hidden">
+                    <strong id="qLabelDisplay" style="color: #818cf8; display: block; margin-bottom: 10px; border-bottom: 1px solid rgba(129, 140, 248, 0.2); padding-bottom: 5px;"></strong>
+                    <div id="previewContent"></div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="main-btn" style="margin-top: 25px;">Fetch Official Solution <i class="fa-solid fa-file-invoice"></i></button>
+            </form>
+
+            <div id="statusArea" style="margin-top: 20px; color: var(--accent); font-weight: 600; text-align: center;"></div>
+
+            <div id="solutionDisplay" class="solution-box hidden">
+                <h4 style="color: var(--success); margin-bottom: 10px;"><i class="fa-solid fa-circle-check"></i> Solution from Teacher:</h4>
+                <p id="solutionText" style="line-height: 1.6; white-space: pre-wrap;"></p>
+            </div>
+
+            <div class="not-found-section">
+                <p class="toggle-link" onclick="toggleManualUpload()">Question not found? Click here to upload manually.</p>
+                <div id="manualUploadArea" class="upload-area hidden">
+                    <form onsubmit="handleManualSubmit(event)">
+                        <label>Paste Question Text</label>
+                        <textarea id="manualText" placeholder="Enter your question here..." style="height: 80px;"></textarea>
+                        <button type="submit" class="main-btn" style="background: var(--glass); border: 1px solid var(--accent); padding: 10px;">Submit Manual Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminView" class="page-view">
+        <div class="glass-card dash-grid">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2>Teacher Dashboard</h2>
+                <button class="badge" style="background: #ef4444; color: white;" onclick="switchView('dashboardView')">Exit Admin</button>
+            </div>
+            <div id="pendingQuestions">
+                <p style="color: var(--text-dim);">Scanning for student requests...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DATABASE - ALL DATA FROM FILE 5 (UNTOUCHED)
+        const ncertDatabase = {
+            "Chapter 1: Real Numbers": {
+                "Exercise 1.1": [
+                    "1. Use Euclid’s division algorithm to find the HCF of: (i) 135 and 225 (ii) 196 and 38220 (iii) 867 and 255",
+                    "2. Show that any positive odd integer is of the form 6q + 1, or 6q + 3, or 6q + 5, where q is some integer.",
+                    "3. An army contingent of 616 members is to march behind an army band of 32 members in a parade. The two groups are to march in the same number of columns. What is the maximum number of columns in which they can march?",
+                    "4. Use Euclid’s division lemma to show that the square of any positive integer is either of the form 3m or 3m + 1 for some integer m.",
+                    "5. Use Euclid’s division lemma to show that the cube of any positive integer is of the form 9m, 9m + 1 or 9m + 8."
+                ],
+                "Exercise 1.2": [
+                    "1. Express each number as a product of its prime factors: (i) 140 (ii) 156 (iii) 3825 (iv) 5005 (v) 7429",
+                    "2. Find the LCM and HCF of the following pairs of integers and verify that LCM × HCF = product of the two numbers: (i) 26 and 91 (ii) 510 and 92 (iii) 336 and 54",
+                    "3. Find the LCM and HCF of the following integers by applying the prime factorisation method: (i) 12, 15 and 21 (ii) 17, 23 and 29 (iii) 8, 9 and 25",
+                    "4. Given that HCF (306, 657) = 9, find LCM (306, 657).",
+                    "5. Check whether 6ⁿ can end with the digit 0 for any natural number n.",
+                    "6. Explain why 7 × 11 × 13 + 13 and 7 × 6 × 5 × 4 × 3 × 2 × 1 + 5 are composite numbers.",
+                    "7. Sonia and Ravi meet again question - Sonia takes 18 mins, Ravi takes 12 mins. After how many minutes will they meet again at the starting point?"
+                ],
+                "Exercise 1.3": ["1. Prove that √5 is irrational.", "2. Prove that 3 + 2√5 is irrational.", "3. Prove following irrationals: (i) 1/√2 (ii) 7√5 (iii) 6 + √2"],
+                "Exercise 1.4": ["1. Terminating vs Non-terminating repeating: (i) 13/3125 (ii) 17/8 (iii) 64/455 (iv) 15/1600 (v) 29/343 (vi) 23/(2³5²) (vii) 129/(2²5⁷7⁵) (viii) 6/15 (ix) 35/50 (x) 77/210", "2. Write decimal expansions of Q1 terminating ones.", "3. Decide rationality: (i) 43.123456789 (ii) 0.120120012000... (iii) 43.123456789 (bar)"]
+            },
+            "Chapter 2: Polynomials": {
+                "Exercise 2.1": ["1. Find the number of zeroes of p(x) for graphs given in Fig 2.10 (Part i to vi)."],
+                "Exercise 2.2": [
+                    "1. Find zeroes and verify relation: (i) x² – 2x – 8 (ii) 4s² – 4s + 1 (iii) 6x² – 3 – 7x (iv) 4u² + 8u (v) t² – 15 (vi) 3x² – x – 4",
+                    "2. Find quadratic polynomial given sum and product: (i) 1/4, -1 (ii) √2, 1/3 (iii) 0, √5 (iv) 1, 1 (v) -1/4, 1/4 (vi) 4, 1"
+                ],
+                "Exercise 2.3": [
+                    "1. Divide p(x) by g(x): (i) p(x) = x³ – 3x² + 5x – 3, g(x) = x² – 2 (ii) p(x) = x⁴ – 3x² + 4x + 5, g(x) = x² + 1 – x",
+                    "2. Check if first is factor of second: (i) t² – 3, 2t⁴ + 3t³ – 2t² – 9t – 12...",
+                    "3. Obtain all other zeroes of 3x⁴ + 6x³ – 2x² – 10x – 5 if two zeroes are √(5/3) and –√(5/3).",
+                    "4. On dividing x³ – 3x² + x + 2 by g(x), quotient was x – 2 and remainder –2x + 4. Find g(x).",
+                    "5. Give examples of p(x), g(x), q(x) satisfying division algorithm: (i) deg p(x) = deg q(x) (ii) deg q(x) = deg r(x) (iii) deg r(x) = 0"
+                ]
+            },
+            "Chapter 3: Pair of Linear Equations": {
+                "Exercise 3.1": [
+                    "1. Aftab tells daughter: Seven years ago I was 7x old... represent algebraically and graphically.",
+                    "2. Cricket coach buys 3 bats, 6 balls for 3900... represent algebraically/geometrically.",
+                    "3. Cost of 2kg apples, 1kg grapes was 160... represent algebraically/geometrically."
+                ],
+                "Exercise 3.2": [
+                    "1. Solve graphically: (i) 10 students quiz, girls 4 more than boys. (ii) 5 pencils, 7 pens cost 50; 7 pencils, 5 pens cost 46.",
+                    "2. Compare ratios a1/a2, b1/b2, c1/c2: (i) 5x – 4y + 8 = 0, 7x + 6y – 9 = 0...",
+                    "3. Consistent or Inconsistent ratios: (i) 3x + 2y = 5; 2x – 3y = 7...",
+                    "4. Consistent graphically: (i) x + y = 5, 2x + 2y = 10...",
+                    "5. Rectangular garden perimeter 36, length 4 more than width. Find dimensions.",
+                    "6. Given 2x + 3y – 8 = 0, write another for Intersecting/Parallel/Coincident.",
+                    "7. Graph x – y + 1 = 0 and 3x + 2y – 12 = 0. Find triangle vertices with x-axis."
+                ],
+                "Exercise 3.3": [
+                    "1. Substitution method: (i) x + y = 14, x – y = 4 (ii) s – t = 3, s/3 + t/2 = 6 (iii) 3x – y = 3, 9x – 3y = 9 (iv) 0.2x + 0.3y = 1.3, 0.4x + 0.5y = 2.3...",
+                    "2. Solve 2x + 3y = 11 and 2x – 4y = –24. Find m for y = mx + 3.",
+                    "3. Form equations and solve: (i) Difference 26, one 3x other. (ii) Larger supplementary exceeds smaller by 18. (iii) Cricket coach 7 bats 6 balls 3800... (iv) Taxi charges fixed + distance... (v) Fraction becomes 9/11 if 2 added to both... (vi) Jacob's age 3x son in 5 years..."
+                ]
+            },
+            "Chapter 4: Quadratic Equations": {
+                "Exercise 4.1": [
+                    "1. Check quadratic: (i) (x + 1)² = 2(x – 3) (ii) x² – 2x = (–2)(3 – x) (iii) (x – 2)(x + 1) = (x – 1)(x + 3)...",
+                    "2. Formulate equations: (i) Rectangular plot 528 m², L = 2B+1. (ii) Product of 2 consecutive integers 306. (iii) Rohan's mother 26 years older... (iv) Train 480km at uniform speed..."
+                ],
+                "Exercise 4.2": [
+                    "1. Factorisation roots: (i) x² – 3x – 10 = 0 (ii) 2x² + x – 6 = 0 (iii) √2x² + 7x + 5√2 = 0...",
+                    "2. Solve Example 1 problems.",
+                    "3. Two numbers sum 27, product 182.",
+                    "4. Two consecutive positive integers, sum of squares 365.",
+                    "5. Altitude of right triangle 7cm less than base, hypotenuse 13cm. Find sides.",
+                    "6. Cottage industry pottery articles... find number and cost."
+                ],
+                "Exercise 4.3": [
+                    "1. Completing square: (i) 2x² – 7x + 3 = 0 (ii) 2x² + x – 4 = 0...",
+                    "2. Quadratic formula for Q1.",
+                    "3. Roots: (i) x – 1/x = 3 (ii) 1/(x+4) – 1/(x-7) = 11/30",
+                    "4. Rehman's age reciprocals sum 1/3.",
+                    "5. Shefali marks Math + English = 30...",
+                    "6. Diagonal of field 60m more than shorter side...",
+                    "7. Difference of squares of two numbers is 180...",
+                    "8. Train 360km at uniform speed. If 5km/h more, 1hr less...",
+                    "9. Two water taps fill tank in 9 3/8 hours...",
+                    "10. Express train takes 1hr less than passenger for 132km...",
+                    "11. Sum of areas of two squares is 468 m²..."
+                ],
+                "Exercise 4.4": [
+                    "1. Nature of roots: (i) 2x² – 3x + 5 = 0 (ii) 3x² – 4√3x + 4 = 0 (iii) 2x² – 6x + 3 = 0",
+                    "2. Find k for equal roots: (i) 2x² + kx + 3 = 0 (ii) kx(x – 2) + 6 = 0",
+                    "3. Design rectangular mango grove area 800, L=2B?",
+                    "4. Situation possible? Ages sum 20, 4 years ago product was 48.",
+                    "5. Possible park perimeter 80, area 400?"
+                ]
+            },
+            "Chapter 5: Arithmetic Progressions": {
+                "Exercise 5.1": ["1. Situation AP check: (i) Taxi fare 15 for 1st km, 8 each extra... (ii) Air in cylinder... (iii) Digging well... (iv) Compound interest...", "2. Write first four terms: (i) a=10, d=10 (ii) a=-2, d=0 (iii) a=4, d=-3...", "3. Find a and d: (i) 3, 1, -1, -3...", "4. Which are APs? Find d and write 3 more terms: (i) 2, 4, 8, 16 (ii) 2, 5/2, 3, 7/2..."],
+                "Exercise 5.2": ["1. Fill table using a_n = a + (n-1)d...", "2. Choose correct option: (i) 30th term of 10, 7, 4... (ii) 11th term of -3, -1/2, 2...", "3. Find missing terms in boxes...", "4. Which term of 3, 8, 13, 18 is 78?", "5. Number of terms in AP: (i) 7, 13, 19... 205...", "6. Check if -150 is term of 11, 8, 5, 2...", "7. Find 31st term given 11th is 38, 16th is 73.", "8. AP has 50 terms, 3rd is 12, last is 106. Find 29th.", "9. 3rd and 9th terms are 4 and -8. Which term is 0?", "10. 17th term exceeds 10th by 7. Find d.", "11. Which term of 3, 15, 27... will be 132 more than 54th term?", "12. Two APs have same d, diff between 100th is 100. Diff between 1000th?", "13. How many 3-digit numbers divisible by 7?", "14. How many multiples of 4 between 10 and 250?", "15. What value of n, n-th terms of 63, 65, 67 and 3, 10, 17 equal?", "16. Determine AP whose 3rd term 16, 7th term exceeds 5th by 12.", "17. 20th term from last of 3, 8, 13... 253.", "18. Sum of 4th and 8th is 24, sum of 6th and 10th is 44. Find first 3 terms.", "19. Subba Rao started work 1995 at 5000, 200 increment. Which year 7000?", "20. Ramkali saved 5 in 1st week, increased by 1.75. Which week 20.75?"],
+                "Exercise 5.3": ["1. Sum of APs: (i) 2, 7, 12... to 10 terms...", "2. Find sums: (i) 7 + 10.5 + 14 + ... + 84...", "3. In an AP: (i) Given a=5, d=3, a_n=50, find n, S_n... (ii) Given a=7, a_13=35, find d, S_13... (iii to x parts)", "4. How many terms of 9, 17, 25... give sum 636?", "5. First term 5, last 45, sum 400. Find n and d.", "6. First and last 17 and 350. d=9. How many terms and sum?", "7. Find sum of first 22 terms where d=7 and 22nd term 149.", "8. Sum of first 51 terms where 2nd is 14, 3rd is 18.", "9. Sum of 7 terms is 49, 17 terms is 289. Sum of n terms?", "10. Show a_n forms AP: (i) a_n = 3+4n (ii) a_n = 9-5n. Find sum of 15 terms.", "11. S_n = 4n - n². What is 1st term? 2nd? 3rd? 10th? n-th?", "12. Sum of first 40 positive integers divisible by 6.", "13. Sum of first 15 multiples of 8.", "14. Sum of odd numbers between 0 and 50.", "15. Contract penalty: 200 1st day, 250 2nd, 300 3rd... penalty for 30 days?", "16. 700 sum for 7 prizes, each 20 less than preceding. Find value of prizes.", "17. School trees: Class 1 plants 1, Class 2 plants 2... 3 sections each. Total?", "18. Spiral radii 0.5, 1.0, 1.5, 2.0... length of 13 semicircles?", "19. 200 logs: 20 bottom, 19 next... how many rows and top row count?", "20. Potato race: bucket at 0, potatoes at 5, 8, 11... total distance run?"]
+            },
+            "Chapter 6: Triangles": {
+                "Exercise 6.1": ["1. Fill blanks: (i) All circles are... (ii) All squares are... (iii) All... triangles are similar. (iv) Two polygons similar if...", "2. Give two examples of: (i) Similar figures (ii) Non-similar figures.", "3. State if quadrilaterals (Square vs Rhombus) similar."],
+                "Exercise 6.2": ["1. Fig 6.17: Find EC in (i), AD in (ii) using BPT.", "2. E and F points on PQ and PR. Check EF || QR: (i) PE=3.9, EQ=3, PF=3.6, FR=2.4...", "3. Fig 6.18: LM || CB and LN || CD, prove AM/AB = AN/AD.", "4. Fig 6.19: DE || AC and DF || AE. Prove BF/FE = BE/EC.", "5. Fig 6.20: DE || OQ and DF || OR. Show EF || QR.", "6. Fig 6.21: A, B, C points on OP, OQ, OR. AB || PQ, AC || PR. Show BC || QR.", "7. Using Thm 6.1 prove line through midpoint || side bisects 3rd side.", "8. Using Thm 6.2 prove line joining midpoints || 3rd side.", "9. ABCD trapezium, AB || DC, diagonals O. Show AO/BO = CO/DO.", "10. Diagonals of quad ABCD intersect O s.t. AO/BO = CO/DO. Show it's trapezium."],
+                "Exercise 6.3": ["1. State similarity criteria for Fig 6.36 pairs...", "2. Fig 6.37: ΔODC ~ ΔOBA, ∠BOC=125, ∠CDO=70. Find ∠DOC, ∠DCO, ∠OAB.", "3. Diagonals of trapezium ABCD (AB || DC) O. Using similarity AO/CO = BO/DO.", "4. Fig 6.38: QR/QS = QT/PR and ∠1 = ∠2. Show ΔPQS ~ ΔTQR.", "5. S and T points on PR and QR s.t. ∠P = ∠RTS. Show ΔRPQ ~ ΔRTS.", "6. Fig 6.39: ΔABE ≅ ΔACD. Show ΔADE ~ ΔABC.", "7. Fig 6.40: Altitudes AD, CE intersect P. Show (i) ΔAEP ~ ΔCDP (ii) ΔABD ~ ΔCBE (iii) ΔAEP ~ ΔADB (iv) ΔPDC ~ ΔBEC.", "8. E point on side AD produced of ||gm ABCD, BE intersects CD at F. ΔABE ~ ΔCFB.", "9. Fig 6.41: ABC, AMP right Δs at B, M. Prove (i) ΔABC ~ ΔAMP (ii) CA/PA = BC/MP.", "10. CD and GH bisectors of ∠C, ∠G. ΔABC ~ ΔFEG. Show (i) CD/GH = AC/FG...", "11. Fig 6.42: E point on side CB produced of isosceles ΔABC. AD ⊥ BC, EF ⊥ AC. ΔABD ~ ΔECF.", "12. Sides AB, BC, median AD of ΔABC proportional to PQ, QR, median PM of ΔPQR. ΔABC ~ ΔPQR.", "13. D point on side BC s.t. ∠ADC = ∠BAC. Show CA² = CB.CD.", "14. Sides AB, AC, median AD proportional to PQ, PR, median PM. ΔABC ~ ΔPQR.", "15. Vertical pole 6m long casts shadow 4m. Tower casts shadow 28m. Height?", "16. AD and PM medians of ΔABC and ΔPQR where ΔABC ~ ΔPQR. Prove AB/PQ = AD/PM."]
+            },
+            "Chapter 7: Coordinate Geometry": {
+                "Exercise 7.1": [
+                    "1. Distance between pairs: (i) (2, 3), (4, 1) (ii) (–5, 7), (–1, 3) (iii) (a, b), (–a, –b)",
+                    "2. Distance between (0, 0) and (36, 15). Town A and B question.",
+                    "3. Determine if points (1, 5), (2, 3) and (–2, –11) are collinear.",
+                    "4. Check if (5, –2), (6, 4) and (7, –2) are vertices of isosceles triangle.",
+                    "5. Classroom Champa/Chameli question: Are ABCD vertices of a square?",
+                    "6. Name type of quadrilateral formed: (i) (–1, –2), (1, 0), (–1, 2), (–3, 0)...",
+                    "7. Find point on x-axis equidistant from (2, –5) and (–2, 9).",
+                    "8. Find y for which distance between P(2, –3) and Q(10, y) is 10 units.",
+                    "9. Q(0, 1) equidistant from P(5, –3) and R(x, 6). Find x, QR, PR.",
+                    "10. Find relation between x, y s.t. (x, y) equidistant from (3, 6) and (–3, 4)."
+                ],
+                "Exercise 7.2": [
+                    "1. Coordinates of point dividing join of (–1, 7) and (4, –3) in ratio 2:3.",
+                    "2. Points of trisection of line joining (4, –1) and (–2, –3).",
+                    "3. Sports Day flags: Niharika 1/4th of AD, Preet 1/5th... distance between them? Rashmi post blue flag midpoint?",
+                    "4. Ratio in which line segment joining (–3, 10) and (6, –8) divided by (–1, 6).",
+                    "5. Ratio in which join of A(1, –5) and B(–4, 5) divided by x-axis. Find point.",
+                    "6. If (1, 2), (4, y), (x, 6) and (3, 5) vertices of ||gm in order, find x and y.",
+                    "7. Coordinates of point A, where AB diameter of circle, center (2, –3), B(1, 4).",
+                    "8. A(–2, –2), B(2, –4). Find P s.t. AP = 3/7 AB and P on segment AB.",
+                    "9. Coordinates of points dividing join of A(–2, 2) and B(2, 8) into 4 equal parts.",
+                    "10. Area of rhombus vertices (3, 0), (4, 5), (–1, 4) and (–2, –1)."
+                ],
+                "Exercise 7.3": [
+                    "1. Area of triangle: (i) (2, 3), (–1, 0), (2, –4) (ii) (–5, –1), (3, –5), (5, 2)",
+                    "2. Find k for collinear points: (i) (7, –2), (5, 1), (3, k) (ii) (8, 1), (k, –4), (2, –5)",
+                    "3. Area of triangle formed by joining midpoints of Δ vertices (0, -1), (2, 1), (0, 3). Ratio?",
+                    "4. Area of quadrilateral vertices in order: (–4, –2), (–3, –5), (3, –2), (2, 3).",
+                    "5. Verify median of triangle divides it into two triangles of equal areas: ΔABC vertices (4, -6), (3, -2), (5, 2)."
+                ]
+            },
+            "Chapter 8: Introduction to Trigonometry": {
+                "Exercise 8.1": [
+                    "1. In Δ ABC, right-angled at B, AB = 24 cm, BC = 7 cm. Determine: (i) sin A, cos A (ii) sin C, cos C",
+                    "2. In Fig. 8.13, find tan P – cot R.",
+                    "3. If sin A = 3/4, calculate cos A and tan A.",
+                    "4. Given 15 cot A = 8, find sin A and sec A.",
+                    "5. Given sec θ = 13/12, calculate all other trigonometric ratios.",
+                    "6. If ∠ A and ∠ B are acute angles such that cos A = cos B, then show that ∠ A = ∠ B.",
+                    "7. If cot θ = 7/8, evaluate: (i) (1 + sin θ)(1 – sin θ) / (1 + cos θ)(1 – cos θ) (ii) cot² θ",
+                    "8. If 3 cot A = 4, check whether (1 – tan² A)/(1 + tan² A) = cos² A – sin² A or not.",
+                    "9. In Δ ABC, right-angled at B, if tan A = 1/√3, find the value of: (i) sin A cos C + cos A sin C (ii) cos A cos C – sin A sin C",
+                    "10. In Δ PQR, right-angled at Q, PR + QR = 25 cm and PQ = 5 cm. Determine the values of sin P, cos P and tan P.",
+                    "11. State whether the following are true or false. Justify your answer: (i) The value of tan A is always less than 1..."
+                ],
+                "Exercise 8.2": [
+                    "1. Evaluate: (i) sin 60° cos 30° + sin 30° cos 60° (ii) 2 tan² 45° + cos² 30° – sin² 60° (iii to v parts)",
+                    "2. Choose the correct option: (i) 2 tan 30° / (1 + tan² 30°)...",
+                    "3. If tan (A + B) = √3 and tan (A – B) = 1/√3; 0° < A + B ≤ 90°; A > B, find A and B.",
+                    "4. State whether true or false: (i) sin (A + B) = sin A + sin B..."
+                ],
+                "Exercise 8.3": [
+                    "1. Evaluate: (i) sin 18° / cos 72° (ii) tan 26° / cot 64° (iii) cos 48° – sin 42° (iv) cosec 31° – sec 59°",
+                    "2. Show that: (i) tan 48° tan 23° tan 42° tan 67° = 1 (ii) cos 38° cos 52° – sin 38° sin 52° = 0",
+                    "3. If tan 2A = cot (A – 18°), where 2A is an acute angle, find the value of A.",
+                    "4. If tan A = cot B, prove that A + B = 90°.",
+                    "5. If sec 4A = cosec (A – 20°), where 4A is an acute angle, find the value of A.",
+                    "6. If A, B and C are interior angles of a triangle ABC, then show that sin((B+C)/2) = cos(A/2).",
+                    "7. Express sin 67° + cos 75° in terms of trigonometric ratios of angles between 0° and 45°."
+                ],
+                "Exercise 8.4": [
+                    "1. Express trigonometric ratios sin A, sec A and tan A in terms of cot A.",
+                    "2. Write all other trigonometric ratios of ∠ A in terms of sec A.",
+                    "3. Evaluate: (i) (sin² 63° + sin² 27°) / (cos² 17° + cos² 73°) (ii) sin 25° cos 65° + cos 25° sin 65°",
+                    "4. Choose correct option: (i) 9 sec² A – 9 tan² A...",
+                    "5. Prove identities: (i) (cosec θ – cot θ)² = (1 – cos θ)/(1 + cos θ) (ii) cos A/(1 + sin A) + (1 + sin A)/cos A = 2 sec A (iii to x parts)"
+                ]
+            },
+            "Chapter 9: Some Applications of Trigonometry": {
+                "Exercise 9.1": [
+                    "1. Circus artist climbing 20m rope tied from top of vertical pole to ground. Angle 30°. Find height of pole.",
+                    "2. Tree breaks due to storm, top touches ground making 30° angle. Distance from foot to top is 8m. Find tree height.",
+                    "3. Contractor installs two slides: (i) Below 5 yrs: height 1.5m, 30° inclination. (ii) Elder: height 3m, 60° inclination. Find lengths.",
+                    "4. Angle of elevation of top of tower from 30m away from foot is 30°. Find height.",
+                    "5. Kite flying at 60m height. String inclined at 60° to ground. Find length of string.",
+                    "6. 1.5m tall boy standing at distance from 30m tall building. Walking towards it, angle changes 30° to 60°. Find distance walked.",
+                    "7. From point on ground, angles of elevation of bottom and top of transmission tower on 20m building are 45° and 60°. Find tower height.",
+                    "8. Statue 1.6m tall stands on pedestal. Angle to top of statue 60°, top of pedestal 45°. Find pedestal height.",
+                    "9. Angle of elevation of building from foot of tower is 30°, tower from foot of building is 60°. Tower is 50m. Find building height.",
+                    "10. Two poles of equal heights on either side of 80m road. Angle to point on road 60° and 30°. Find pole heights and distances.",
+                    "11. TV tower on bank of canal. Angle from other bank 60°, from 20m further away 30°. Find height and canal width.",
+                    "12. From 7m building, angle of elevation of cable tower top is 60°, depression of foot is 45°. Find tower height.",
+                    "13. Observed from 75m lighthouse, angles of depression of two ships are 30° and 45°. One ship behind other. Find distance between ships.",
+                    "14. 1.2m tall girl spots balloon moving horizontally at 88.2m height. Angle changes 60° to 30°. Find distance traveled by balloon.",
+                    "15. Straight highway leads to tower. Man at top sees car at 30° depression. 6 seconds later (uniform speed), it's 60°. Find time to reach tower.",
+                    "16. Angles of elevation of tower top from two points 4m and 9m away are complementary. Prove tower height is 6m."
+                ]
+            },
+            "Chapter 10: Circles": {
+                "Exercise 10.1": [
+                    "1. How many tangents can a circle have?",
+                    "2. Fill in the blanks: (i) A tangent to a circle intersects it in... point(s). (ii) A line intersecting a circle in two points is a...",
+                    "3. A tangent PQ at a point P of a circle of radius 5 cm meets a line through the centre O at a point Q so that OQ = 12 cm. Length PQ is:",
+                    "4. Draw a circle and two lines parallel to a given line such that one is a tangent and the other, a secant to the circle."
+                ],
+                "Exercise 10.2": [
+                    "1. From point Q, length of tangent is 24 cm, distance from centre is 25 cm. Find radius.",
+                    "2. In Fig 10.11, TQ and TP tangents, ∠POQ = 110°. Find ∠PTQ.",
+                    "3. Tangents PA and PB from P to circle O inclined at 80°. Find ∠POA.",
+                    "4. Prove that tangents drawn at the ends of a diameter of a circle are parallel.",
+                    "5. Prove that the perpendicular at the point of contact to the tangent to a circle passes through the centre.",
+                    "6. Length of tangent from point A at distance 5 cm from centre is 4 cm. Find radius.",
+                    "7. Two concentric circles radii 5 cm and 3 cm. Find length of chord of larger which touches smaller.",
+                    "8. Quadrilateral ABCD drawn to circumscribe circle. Prove AB + CD = AD + BC.",
+                    "9. In Fig 10.13, XY and X'Y' parallel tangents. Tangent AB intersects at C. Prove ∠AOB = 90°.",
+                    "10. Prove angle between two tangents from external point is supplementary to angle subtended by segment joining points of contact at centre.",
+                    "11. Prove that a parallelogram circumscribing a circle is a rhombus.",
+                    "12. Triangle ABC circumscribing circle radius 4 cm. Segment BD=8, CD=6. Find sides AB and AC.",
+                    "13. Prove opposite sides of quadrilateral circumscribing a circle subtend supplementary angles at the centre."
+                ]
+            },
+            "Chapter 11: Constructions": {
+                "Exercise 11.1": [
+                    "1. Draw line segment 7.6 cm and divide in ratio 5:8. Measure parts.",
+                    "2. Construct triangle sides 4, 5, 6 cm. Then triangle similar to it with scale factor 2/3.",
+                    "3. Construct triangle sides 5, 6, 7 cm. Then triangle similar with scale factor 7/5.",
+                    "4. Construct isosceles triangle base 8 cm, altitude 4 cm. Then triangle similar with scale factor 1 1/2.",
+                    "5. Draw triangle ABC with BC=6, AB=5, ∠ABC=60°. Then triangle similar with scale factor 3/4.",
+                    "6. Draw triangle ABC with BC=7, ∠B=45°, ∠A=105°. Then triangle similar with scale factor 4/3.",
+                    "7. Draw right triangle sides (other than hypotenuse) 4 cm and 3 cm. Then triangle similar with scale factor 5/3."
+                ],
+                "Exercise 11.2": [
+                    "1. Draw circle radius 6 cm. From point 10 cm from centre, construct tangents and measure lengths.",
+                    "2. Construct tangent to circle radius 4 cm from point on concentric circle radius 6 cm. Measure length.",
+                    "3. Draw circle radius 3 cm. Take points P, Q on extended diameter 7 cm from centre. Draw tangents from P and Q.",
+                    "4. Draw pair of tangents to circle radius 5 cm inclined at 60° to each other.",
+                    "5. Draw line segment AB 8 cm. Circles at A (radius 4) and B (radius 3). Construct tangents to each circle from centre of other.",
+                    "6. Let ABC be right triangle AB=6, BC=8, ∠B=90°. BD perpendicular to AC. Draw circle through B, C, D. Construct tangents from A.",
+                    "7. Draw a circle with help of a bangle. Take point outside and construct tangents."
+                ]
+            },
+            "Chapter 12: Areas Related to Circles": {
+                "Exercise 12.1": [
+                    "1. Radii of two circles 19 cm and 9 cm. Find radius of circle having circumference equal to sum of their circumferences.",
+                    "2. Radii of two circles 8 cm and 6 cm. Find radius of circle having area equal to sum of their areas.",
+                    "3. Fig 12.3 Archery target: Gold (dia 21), Red, Blue, Black, White. Width 10.5 cm. Find area of each score band.",
+                    "4. Wheels of car diameter 80 cm. How many revolutions in 10 mins at 66 km/h?",
+                    "5. If perimeter and area of circle numerically equal, radius is: (A) 2 units (B) π units (C) 4 units (D) 7 units"
+                ],
+                "Exercise 12.2": [
+                    "1. Find area of sector of circle radius 6 cm, angle 60°.",
+                    "2. Find area of quadrant of circle circumference 22 cm.",
+                    "3. Length of minute hand is 14 cm. Find area swept in 5 minutes.",
+                    "4. Chord of circle radius 10 cm subtends right angle at centre. Find area of: (i) minor segment (ii) major sector (π=3.14).",
+                    "5. Circle radius 21 cm, angle 60°. Find: (i) arc length (ii) sector area (iii) segment area.",
+                    "6. Chord of circle radius 15 cm, angle 60°. Find areas of minor and major segments.",
+                    "7. Chord of circle radius 12 cm, angle 120°. Find area of segment.",
+                    "8. Horse tied to corner of 15m square field with 5m rope. Find: (i) grazing area (ii) increase if rope was 10m.",
+                    "9. Brooch made with silver wire diameter 35mm. 5 diameters divide into 10 sectors. Find: (i) wire length (ii) sector area.",
+                    "10. Umbrella has 8 ribs radius 45 cm. Find area between two consecutive ribs.",
+                    "11. Car has two wipers, length 25 cm, sweeping 115°. Find total area cleaned at each sweep.",
+                    "12. To warn ships, lighthouse spreads red light over 80° sector to 16.5 km. Find area of sea warned.",
+                    "13. Round table cover 6 designs. Radius 28 cm, cost ₹0.35 per cm². (√3=1.7).",
+                    "14. Area of sector of angle p (in degrees) of circle radius R is: (D) (p/720) * 2πR²"
+                ],
+                "Exercise 12.3": [
+                    "1. Find area of shaded region Fig 12.19, PQ=24, PR=7, O is centre.",
+                    "2. Find shaded region Fig 12.20, concentric circles radii 7 and 14 cm, ∠AOC=40°.",
+                    "3. Find shaded region Fig 12.21, square ABCD side 14 cm, APD and BPC semi-circles.",
+                    "4. Shaded region Fig 12.22, circular arc radius 6 cm on equilateral triangle side 12 cm.",
+                    "5. From each corner of square 4 cm, quadrant of 1 cm cut, circle dia 2 cm cut. Find remaining area.",
+                    "6. Circular table cover radius 32 cm, design in middle leaving equilateral triangle. Find design area.",
+                    "7. Fig 12.25: ABCD square side 14 cm. 4 circles drawn touching others. Find shaded area.",
+                    "8. Racing track Fig 12.26: inner width 60m, straight 106m, track 10m wide. Find: (i) inner distance (ii) track area.",
+                    "9. Fig 12.27: AB and CD perpendicular diameters, OD diameter of small circle. OA=7. Find shaded area.",
+                    "10. Area of equilateral triangle 17320.5 cm². Circles radius half of side. Find shaded area (π=3.14, √3=1.73205).",
+                    "11. 9 circular designs radius 7 cm on square handkerchief. Find remaining area.",
+                    "12. OACB quadrant radius 3.5 cm. OD=2 cm. Find area of: (i) quadrant (ii) shaded region.",
+                    "13. Square OABC in quadrant OPBQ. OA=20 cm. Find shaded area (π=3.14).",
+                    "14. AB and CD arcs of concentric circles radii 21 and 7 cm, angle 30°. Find shaded area.",
+                    "15. Fig 12.33: ABC quadrant radius 14 cm. Semi-circle on BC as diameter. Find shaded area.",
+                    "16. Calculate area of design in Fig 12.34 common between two quadrants of circles radius 8 cm."
+                ]
+            },
+            "Chapter 13: Surface Areas and Volumes": {
+                "Exercise 13.1": [
+                    "1. 2 cubes each of volume 64 cm³ joined end to end. Find surface area of resulting cuboid.",
+                    "2. Vessel in form of hollow hemisphere surmounted by hollow cylinder. Dia 14, height 13. Find inner surface area.",
+                    "3. Toy in form of cone radius 3.5 on hemisphere. Total height 15.5. Find total surface area.",
+                    "4. Cubical block side 7 cm surmounted by hemisphere. Max diameter? Find total surface area.",
+                    "5. Hemispherical depression cut from one face of cubical wood block side l. Find remaining surface area.",
+                    "6. Medicine capsule cylinder with two hemispheres. Length 14mm, dia 5mm. Find surface area.",
+                    "7. Tent cylinder surmounted by cone. Cyl height 2.1, dia 4. Slant height 2.8. Find canvas area and cost at ₹500/m².",
+                    "8. Solid cylinder height 2.4, dia 1.4. Conical cavity same height/dia hollowed out. Find total surface area to nearest cm².",
+                    "9. Wooden article made by scooping out hemisphere from each end of cylinder. Cyl height 10, base radius 3.5. Find total surface area."
+                ],
+                "Exercise 13.2": [
+                    "1. Solid in shape of cone on hemisphere, both radii 1 cm, cone height = radius. Find volume in terms of π.",
+                    "2. Rachel made model: cylinder with two cones at ends. Dia 3, length 12, cone height 2. Find volume of air inside.",
+                    "3. Gulab jamun contains sugar syrup 30% of volume. Find syrup in 45 jamuns (cylinder with hemispherical ends, length 5, dia 2.8).",
+                    "4. Pen stand: cuboid with 4 conical depressions. Cuboid 15x10x3.5. Depressions radius 0.5, depth 1.4. Find volume of wood.",
+                    "5. Vessel inverted cone height 8, radius 5. Water to brim. Lead shots (spheres 0.5cm) dropped, 1/4th water flows out. Find number of shots.",
+                    "6. Solid iron pole: cylinder height 220, dia 24 surmounted by cylinder height 60, radius 8. Find mass (1cm³ = 8g).",
+                    "7. Solid: right circular cone (height 120, radius 60) on hemisphere (radius 60) placed in cylinder full of water. Find water left.",
+                    "8. Spherical glass vessel: cylindrical neck height 8, dia 2. Spherical part dia 8.5. Child finds volume 345 cm³. Check if correct."
+                ],
+                "Exercise 13.3": [
+                    "1. Metallic sphere radius 4.2 melted and recast into cylinder radius 6. Find cylinder height.",
+                    "2. Metallic spheres radii 6, 8, 10 melted to form one solid sphere. Find its radius.",
+                    "3. 20m deep well dia 7 dug, earth spread to form platform 22m x 14m. Find height of platform.",
+                    "4. Well dia 3 dug 14m deep. Earth spread around to form embankment width 4m. Find height of embankment.",
+                    "5. Container (cylindrical, dia 12, height 15) full of ice cream. To be filled in cones height 12, dia 6 with hemispherical top. Find number of cones.",
+                    "6. How many silver coins 1.75cm dia, thickness 2mm melted to form cuboid 5.5 x 10 x 3.5 cm?",
+                    "7. Cylindrical bucket height 32, radius 18 filled with sand. Recast into conical heap height 24. Find radius and slant height.",
+                    "8. Water in canal 6m wide, 1.5m deep flowing at 10 km/h. How much area irrigate in 30 mins if 8cm standing water needed?",
+                    "9. Farmer connects pipe internal dia 20cm from canal to cylindrical tank radius 10m, depth 2m. Water speed 3 km/h. How much time to fill?"
+                ],
+                "Exercise 13.4": [
+                    "1. Drinking glass frustum of cone, height 14, diameters 4 and 2. Find capacity.",
+                    "2. Slant height of frustum is 4, circumferences 18 and 6. Find curved surface area.",
+                    "3. Fez (Turkish cap) frustum. Open side radius 10, upper base 4, slant height 15. Find area of material used.",
+                    "4. Container open from top, height 16, radii 20 and 8. Find cost of milk at ₹20/L and cost of metal used at ₹8/100cm².",
+                    "5. Metallic right circular cone height 20, angle 60° cut into two parts by plane at middle of height. Frustum wire dia 1/16 cm. Find length."
+                ]
+            },
+            "Chapter 14: Statistics": {
+                "Exercise 14.1": [
+                    "1. Survey of plants in 20 houses. Find mean number of plants per house.",
+                    "2. Daily wages of 50 workers. Find mean daily wage using appropriate method.",
+                    "3. Pocket allowance mean is 18. Find missing frequency f.",
+                    "4. Heart beats of 30 women. Find mean heart beats per minute.",
+                    "5. Mangoes in boxes. Find mean number of mangoes.",
+                    "6. Expenditure on food. Find mean daily expenditure by step-deviation method.",
+                    "7. Concentration of SO2. Find mean concentration.",
+                    "8. Absentee record of 40 students. Find mean number of days student was absent.",
+                    "9. Literacy rate of 35 cities. Find mean literacy rate."
+                ],
+                "Exercise 14.2": [
+                    "1. Age of patients in hospital. Find mode and mean. Compare.",
+                    "2. Lifetimes of 225 electrical components. Determine modal lifetimes.",
+                    "3. Monthly expenditure of 200 families. Find modal and mean expenditure.",
+                    "4. State-wise teacher-student ratio. Find mode and mean.",
+                    "5. Runs scored by batsmen. Find mode of data.",
+                    "6. Number of cars passing through spot. Find mode."
+                ],
+                "Exercise 14.3": [
+                    "1. Monthly consumption of electricity. Find median, mean and mode.",
+                    "2. If median of distribution (sum 60) is 28.5, find x and y.",
+                    "3. Life insurance agent data. Find median age (policy given to 18 to 60 yrs).",
+                    "4. Length of 40 leaves. Find median length.",
+                    "5. Life time of 400 neon lamps. Find median life time.",
+                    "6. 100 surnames from directory. Find median, mean and modal size of surnames.",
+                    "7. Weight of 30 students. Find median weight."
+                ],
+                "Exercise 14.4": [
+                    "1. Daily income of 50 workers. Convert to less than type cumulative frequency distribution and draw ogive.",
+                    "2. Weights of 35 students. Draw less than type ogive. Obtain median from graph and verify.",
+                    "3. Yield of wheat per hectare. Change to more than type distribution and draw ogive."
+                ]
+            },
+            "Chapter 15: Probability": {
+                "Exercise 15.1": [
+                    "1. Complete statements: (i) P(E) + P(not E) = ... (ii) Probability of sure event is ... (iii) Sum of probabilities of all elementary events is ...",
+                    "2. Which experiments have equally likely outcomes? (Driver starts car, Player shoots hoop, True/False, Baby born)...",
+                    "3. Why is tossing coin fair way to decide who gets ball?",
+                    "4. Which cannot be probability of event? (A) 2/3 (B) -1.5 (C) 15% (D) 0.7",
+                    "5. If P(E) = 0.05, what is P(not E)?",
+                    "6. Bag has lemon candies only. Malini takes one. Prob: (i) orange candy (ii) lemon candy?",
+                    "7. Prob 2 students NOT having same birthday is 0.992. Prob they HAVE same birthday?",
+                    "8. Bag: 3 red, 5 black balls. Prob: (i) red (ii) not red?",
+                    "9. Box: 5 red, 8 white, 4 green marbles. Prob: (i) red (ii) white (iii) not green?",
+                    "10. Piggy bank: 100 50p coins, 50 ₹1, 20 ₹2, 10 ₹5. Prob: (i) 50p coin (ii) not ₹5 coin?",
+                    "11. Gopi buys fish. Tank: 5 male, 8 female. Prob fish taken is male?",
+                    "12. Game of chance: spinning arrow (1 to 8). Prob: (i) 8 (ii) odd number (iii) number > 2 (iv) number < 9?",
+                    "13. Die thrown once. Prob: (i) prime number (ii) number between 2 and 6 (iii) odd number?",
+                    "14. One card from 52. Prob: (i) King of red color (ii) Face card (iii) Red face card (iv) Jack of hearts (v) Spade (vi) Queen of diamonds?",
+                    "15. 5 cards (10, J, Q, K, A of diamonds). (i) Prob Q? (ii) If Q drawn, prob A? prob Q?",
+                    "16. 12 defective pens mixed with 132 good ones. Prob pen taken is good?",
+                    "17. (i) Lot of 20 bulbs, 4 defective. Prob defective? (ii) If not defective and not replaced, then prob not defective from rest?",
+                    "18. Box: 90 discs (1 to 90). Prob: (i) 2-digit number (ii) perfect square (iii) divisible by 5?",
+                    "19. Child has die (A, B, C, D, E, A). Prob: (i) A (ii) D?",
+                    "20. Prob landing in circle dia 1m inside 3x2m rectangle?",
+                    "21. Lot of 144 pens, 20 defective. Nuri buys if good. Prob: (i) she buys (ii) she doesn't?",
+                    "22. Two dice (Ex 13). (i) Fill table for sum (2 to 12). (ii) Student argues each has prob 1/11. Agree?",
+                    "23. Game: tossing ₹1 coin 3 times. Hanif wins if all same. Prob he loses?",
+                    "24. Die thrown twice. Prob: (i) 5 not come up either time (ii) 5 come up at least once?",
+                    "25. Which arguments are correct? (i) Two coins: 3 outcomes (2H, 2T, 1 of each) each 1/3. (ii) Die: 2 outcomes (odd/even) each 1/2."
+                ]
+            }
+        };
+
+        // SHARED SYSTEM LOGIC (UNTOUCHED)
+        let database = JSON.parse(localStorage.getItem('mathDB_V6')) || { requests: [] };
+        let activeRequestId = null;
+
+        function switchView(id) {
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'dashboardView') populateChapters();
+            if(id === 'adminView') renderAdminTasks();
+            window.scrollTo(0,0);
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            document.getElementById('welcomeMsg').innerText = "Namaste, " + document.getElementById('userName').value;
+            switchView('dashboardView');
+        }
+
+        function populateChapters() {
+            const chapS = document.getElementById('chapterSelect');
+            chapS.innerHTML = '<option value="" disabled selected>Select Chapter</option>';
+            Object.keys(ncertDatabase).forEach(chap => chapS.add(new Option(chap, chap)));
+        }
+
+        function loadExercises() {
+            const chap = document.getElementById('chapterSelect').value;
+            const exS = document.getElementById('exSelect');
+            exS.innerHTML = '<option value="" disabled selected>Select Exercise</option>';
+            Object.keys(ncertDatabase[chap]).forEach(ex => exS.add(new Option(ex, ex)));
+        }
+
+        function loadQuestions() {
+            const chap = document.getElementById('chapterSelect').value;
+            const ex = document.getElementById('exSelect').value;
+            const qS = document.getElementById('qSelect');
+            qS.innerHTML = '<option value="" disabled selected>Select Question Number</option>';
+            ncertDatabase[chap][ex].forEach((q, i) => qS.add(new Option(`Question ${i+1}`, i)));
+        }
+
+        function showPreview() {
+            const chap = document.getElementById('chapterSelect').value;
+            const ex = document.getElementById('exSelect').value;
+            const qIdx = document.getElementById('qSelect').value;
+            const box = document.getElementById('previewBox');
+            if(qIdx !== "") {
+                box.classList.remove('hidden');
+                document.getElementById('qLabelDisplay').innerText = `Question ${parseInt(qIdx)+1}`;
+                document.getElementById('previewContent').innerText = ncertDatabase[chap][ex][qIdx];
+                document.getElementById('solutionDisplay').classList.add('hidden');
+            }
+        }
+
+        function handleStudentSubmit(e) {
+            e.preventDefault();
+            const chap = document.getElementById('chapterSelect').value;
+            const ex = document.getElementById('exSelect').value;
+            const qIdx = document.getElementById('qSelect').value;
+            const qText = ncertDatabase[chap][ex][qIdx];
+
+            const existing = database.requests.find(r => r.question === qText && r.status === 'Solved');
+            
+            if(existing) {
+                showSolution(existing.solution);
+            } else {
+                const reqId = Date.now();
+                const newReq = { id: reqId, question: qText, solution: null, status: 'Pending' };
+                database.requests.push(newReq);
+                saveData();
+                activeRequestId = reqId;
+                document.getElementById('statusArea').innerText = "Question sent! Please wait while teacher uploads the solution...";
+                startStatusCheck(reqId);
+            }
+        }
+
+        function handleManualSubmit(e) {
+            e.preventDefault();
+            const text = document.getElementById('manualText').value;
+            if(!text) return alert("Please enter text.");
+            
+            const reqId = Date.now();
+            database.requests.push({ id: reqId, question: "[MANUAL] " + text, solution: null, status: 'Pending' });
+            saveData();
+            alert("Custom request sent to Teacher.");
+            toggleManualUpload();
+        }
+
+        function showAdmin() {
+            const pass = prompt("Enter Admin Password:");
+            if(pass === "1445") switchView('adminView');
+        }
+
+        function renderAdminTasks() {
+            const container = document.getElementById('pendingQuestions');
+            const pending = database.requests.filter(r => !r.solution);
+            
+            if(pending.length === 0) {
+                container.innerHTML = "<p style='color:var(--text-dim)'>No pending questions from students.</p>";
+                return;
+            }
+
+            container.innerHTML = '';
+            pending.forEach(req => {
+                const div = document.createElement('div');
+                div.className = "admin-item";
+                div.innerHTML = `
+                    <p style="margin-bottom:10px"><strong>New Request:</strong><br>${req.question}</p>
+                    <textarea id="sol-${req.id}" placeholder="Type step-by-step solution here..." style="height:100px; margin-bottom:10px;"></textarea>
+                    <button class="main-btn" style="padding:10px; font-size:12px;" onclick="uploadSolution(${req.id})">Publish Solution</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function uploadSolution(id) {
+            const solText = document.getElementById(`sol-${id}`).value;
+            if(!solText) return alert("Please type a solution.");
+            
+            const req = database.requests.find(r => r.id === id);
+            req.solution = solText;
+            req.status = 'Solved';
+            saveData();
+            alert("Solution Published Successfully!");
+            renderAdminTasks();
+        }
+
+        function saveData() { localStorage.setItem('mathDB_V6', JSON.stringify(database)); }
+
+        function showSolution(text) {
+            document.getElementById('statusArea').innerText = "";
+            document.getElementById('solutionDisplay').classList.remove('hidden');
+            document.getElementById('solutionText').innerText = text;
+        }
+
+        function startStatusCheck(id) {
+            const interval = setInterval(() => {
+                const currentData = JSON.parse(localStorage.getItem('mathDB_V6'));
+                const myReq = currentData.requests.find(r => r.id === id);
+                if(myReq && myReq.solution) {
+                    showSolution(myReq.solution);
+                    clearInterval(interval);
+                }
+            }, 3000);
+        }
+
+        function toggleManualUpload() {
+            document.getElementById('manualUploadArea').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

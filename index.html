@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Solver Pro | Full NCERT 2020 Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Noto+Serif+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --bg-dark: #020617;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-bright: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --gold: #fbbf24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-dark); min-height: 100vh; color: var(--text-bright); overflow-x: hidden; }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.9)),
+                url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+        }
+
+        .math-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(var(--accent-glow) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .page-view { display: none; width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; z-index: 10; animation: fadeIn 0.6s ease-out; }
+        .page-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* FACULTY ICON */
+        .faculty-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--gold), #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-dark);
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+            z-index: 999;
+            transition: 0.4s;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        /* HERO SECTION (MOBILE FRIENDLY) */
+        .hero-section { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 30px; 
+            padding: 40px 30px; 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 30px; 
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (min-width: 992px) {
+            .hero-section { grid-template-columns: 1.2fr 0.8fr; padding: 60px; }
+            .page-view { padding: 40px 20px; }
+        }
+
+        .hero-section::before {
+            content: '∑';
+            position: absolute;
+            top: -10px; right: 10px;
+            font-size: 8rem;
+            color: rgba(255,255,255,0.03);
+            font-weight: 800;
+        }
+
+        .shlok-card { 
+            background: linear-gradient(145deg, rgba(251, 191, 36, 0.1), rgba(2, 6, 23, 0.8)); 
+            border-radius: 30px; 
+            padding: 30px; 
+            text-align: center; 
+            border: 1px solid rgba(251, 191, 36, 0.4); 
+            margin-top: 30px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        /* Mobile Text Adjustments */
+        .shlok-hindi { font-family: 'Noto Serif Devanagari', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 15px; line-height: 1.4; }
+        @media (min-width: 768px) { .shlok-hindi { font-size: 2.2rem; } }
+
+        .hero-title { font-size: 2.5rem; line-height: 1.1; margin-bottom: 20px; font-weight: 800; }
+        @media (min-width: 768px) { .hero-title { font-size: 4rem; } }
+
+        .motivation-tagline { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+        .quote-box { border-left: 4px solid var(--accent); padding-left: 15px; margin: 25px 0; font-style: italic; color: #cbd5e1; font-size: 1rem; }
+
+        .glass-card { background: var(--glass); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-radius: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); overflow: hidden; }
+        .auth-container { max-width: 450px; margin: 50px auto; padding: 30px; }
+        @media (min-width: 768px) { .auth-container { padding: 50px; margin-top: 100px; } }
+
+        .input-box { width: 100%; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); border-radius: 12px; color: white; padding: 14px; margin-bottom: 20px; outline: none; }
+        .selection-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px; }
+        @media (min-width: 576px) { .selection-grid { grid-template-columns: 1fr 1fr; } }
+
+        select, textarea { width: 100%; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); border-radius: 12px; color: white; padding: 14px; outline: none; }
+        .main-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+        .hero-img { width: 100%; max-width: 400px; margin: 0 auto; display: block; filter: drop-shadow(0 20px 30px var(--accent-glow)); }
+
+        .badge { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; padding: 5px 12px; border-radius: 100px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+        .admin-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--glass-border); }
+        .sol-img { max-width: 100%; border-radius: 15px; margin-top: 15px; display: block; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBjLuUMpA4l8tM6FptrFlfiZuPYX0BQZ7Y",
+    authDomain: "website-c1c00.firebaseapp.com",
+    projectId: "website-c1c00",
+    storageBucket: "website-c1c00.firebasestorage.app",
+    messagingSenderId: "819641216160",
+    appId: "1:819641216160:web:6c5e83f1d63e14466f2dc5",
+    measurementId: "G-JC1XPSSCPQ"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+    <div class="bg-gradient"></div>
+    <div class="math-overlay"></div>
+
+    <div id="facultyIcon" class="faculty-fab" onclick="showAdmin()" title="Faculty Access">
+        <i class="fa-solid fa-user-tie"></i>
+    </div>
+
+    <div id="landingView" class="page-view active">
+        <div class="hero-section">
+            <div class="content">
+                <div class="motivation-tagline">Achieve Infinite Potential</div>
+                <h1 class="hero-title">Master the <br><span style="color: var(--accent);">Language of Nature.</span></h1>
+                
+                <div class="quote-box">
+                    "Mathematics is not about numbers, equations, computations, or algorithms: it is about understanding."
+                    <br><small style="color: var(--accent); font-weight: 600;">— William Paul Thurston</small>
+                </div>
+
+                <p style="color: var(--text-dim); margin-bottom: 30px; font-size: 1rem; line-height: 1.5;">Access the complete NCERT Class 10 database. Ask complex questions, get verified solutions, and track your progress through the world of logic.</p>
+                
+                <button onclick="switchView('authView')" class="main-btn" style="max-width: 250px;">Student Login <i class="fa-solid fa-graduation-cap"></i></button>
+            </div>
+            <div class="image-wrapper">
+                <img src="https://cdni.iconscout.com/illustration/premium/thumb/mathematics-illustration-download-in-svg-png-gif-file-formats--formula-geometry-study-education-pack-illustrations-5384439.png" class="hero-img">
+            </div>
+        </div>
+
+        <div class="shlok-card">
+            <div class="shlok-hindi">न हि ज्ञानेन सदृशं पवित्रमिह विद्यते ।<br>तत्स्वयं योगसंसिद्ध: कालेनात्मनि विन्दति ॥</div>
+            <div style="font-size: 1.1rem; color: #f1f5f9; margin-top: 15px; font-weight: 300;">"Is sansaar mein gyaan ke samaan pavitra kuch bhi nahi hai..."</div>
+            <div style="font-style: italic; color: var(--text-dim); margin-top: 15px; font-size: 1rem; line-height: 1.6;">
+                "In this world, there is nothing so purifying as knowledge. One who has become accomplished in Yoga finds that knowledge within oneself in due course of time." 
+                <br><strong style="color: var(--gold);">— Bhagavad Gita (Adhyaya 4, Shloka 38)</strong>
+            </div>
+        </div>
+    </div>
+
+    <div id="authView" class="page-view">
+        <div class="glass-card auth-container">
+            <h2 style="text-align: center; margin-bottom: 30px;">Student Login</h2>
+            <form onsubmit="handleAuth(event)">
+                <label style="font-size: 11px; color: var(--text-dim);">USERNAME</label>
+                <input type="text" id="userName" class="input-box" required>
+                <label style="font-size: 11px; color: var(--text-dim);">PASSWORD</label>
+                <input type="password" id="userPass" class="input-box" required>
+                <button type="submit" class="main-btn">Access Database</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboardView" class="page-view">
+        <div class="glass-card" style="padding: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 id="welcomeMsg" style="font-size: 1.2rem;">Welcome</h2>
+                <button onclick="location.reload()" class="badge" style="background:rgba(239, 68, 68, 0.2); color: #f87171; border:none; padding: 8px 15px; cursor:pointer;">Logout</button>
+            </div>
+            <form onsubmit="handleStudentSubmit(event)">
+                <div class="selection-grid">
+                    <div><label style="font-size: 10px; color: var(--text-dim);">CHAPTER</label><select id="chapterSelect" onchange="loadExercises()" required></select></div>
+                    <div><label style="font-size: 10px; color: var(--text-dim);">EXERCISE</label><select id="exSelect" onchange="loadQuestions()" required><option>Select Chapter</option></select></div>
+                </div>
+                <label style="font-size: 10px; color: var(--text-dim);">QUESTION</label>
+                <select id="qSelect" onchange="showPreview()" required><option>Select Exercise</option></select>
+                <div id="previewBox" class="question-preview hidden" style="margin-top:15px;"><strong id="qLabelDisplay" style="color: var(--accent); display: block; margin-bottom: 5px;"></strong><div id="previewContent" style="font-size: 13px;"></div></div>
+                <button type="submit" id="askBtn" class="main-btn">Ask Faculty for Solution</button>
+            </form>
+            <div id="statusArea" style="margin-top: 15px; color: var(--accent); font-weight: 600; text-align: center; font-size: 14px;"></div>
+            <div id="solutionDisplay" class="solution-box hidden"><h4 style="color: var(--success); margin-bottom: 10px;"><i class="fa-solid fa-circle-check"></i> Faculty Response:</h4><p id="solutionText" style="white-space: pre-wrap; font-size: 14px;"></p><div id="solutionImageContainer"></div></div>
+            <div id="userHistory" class="history-section hidden"><h3 style="margin-bottom: 15px; font-size: 1rem; color: var(--accent);">Your Solved Questions</h3><div id="historyList"></div></div>
+        </div>
+    </div>
+
+    <div id="adminView" class="page-view">
+        <div class="glass-card" style="padding: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2>Faculty Dash</h2>
+                <button class="badge" style="background: #6366f1; color: white; border:none; cursor:pointer;" onclick="switchView('dashboardView')">Exit Admin</button>
+            </div>
+            <div id="pendingQuestions"></div>
+        </div>
+    </div>
+
+    <script>
+        // Same ncertDatabase content
+        const ncertDatabase = {
+            "Chapter 1: Real Numbers": {
+                "Exercise 1.1": ["1. Use Euclid’s division algorithm to find HCF: (i) 135 & 225 (ii) 196 & 38220 (iii) 867 & 255","2. Show any positive odd integer is form 6q+1, 6q+3, 6q+5","3. Army contingent 616 members, band 32. Max columns?","4. Square of integer is 3m or 3m+1","5. Cube of integer is 9m, 9m+1 or 9m+8"],
+                "Exercise 1.2": ["1. Prime factors: 140, 156, 3825, 5005, 7429","2. Find LCM/HCF and verify Product rule","3. LCM/HCF by prime factorisation: (i) 12, 15, 21...","4. HCF(306, 657)=9, find LCM","5. Can 6^n end with 0?","6. Explain composite numbers","7. Sonia/Ravi meeting time"],
+                "Exercise 1.3": ["1. Prove √5 is irrational", "2. Prove 3 + 2√5 is irrational", "3. Prove 1/√2, 7√5, 6+√2 are irrational"],
+                "Exercise 1.4": ["1. Terminating vs Repeating decimals", "2. Decimal expansions of Q1", "3. Decide rationality and prime factors of q"]
+            },
+            "Chapter 2: Polynomials": {
+                "Exercise 2.1": ["1. Find number of zeroes from graphs"],
+                "Exercise 2.2": ["1. Find zeroes and verify relationship","2. Find quadratic poly given Sum/Product"],
+                "Exercise 2.3": ["1. Divide p(x) by g(x)","2. Check if first poly is factor of second","3. Find other zeroes of 3x^4+6x^3-2x^2-10x-5","4. Find g(x) given p(x), q(x), r(x)","5. Examples of p(x), g(x), q(x), r(x)"]
+            },
+            "Chapter 3: Linear Equations": {
+                "Exercise 3.1": ["1. Aftab's age problem","2. Bat and ball cost","3. Apple and grape cost"],
+                "Exercise 3.2": ["1. Graphic solutions for quiz/pencil-pen","2. Compare a1/a2, b1/b2, c1/c2","3. Consistent/Inconsistent check","4. Graphic check for consistency","5. Garden dimensions problem","6. Write equation for Intersecting/Parallel/Coincident","7. Triangle vertices with x-axis graph"],
+                "Exercise 3.3": ["1. Substitution method solve","2. Solve and find m for y=mx+3","3. Formulate and solve situational problems"],
+                "Exercise 3.4": ["1. Elimination and Substitution methods","2. Problems on fractions, age, numbers, etc."],
+                "Exercise 3.5": ["1. Cross-multiplication method","2. Find a and b for infinite solutions","3. Solve by cross-multiplication","4. Part of monthly hostel charges, etc."],
+                "Exercise 3.6": ["1. Equations reducible to linear form","2. Ritu rowing, work problems, train speed"]
+            },
+            "Chapter 4: Quadratic Equations": {
+                "Exercise 4.1": ["1. Check if quadratic","2. Formulate equations for plot/integers/age/train"],
+                "Exercise 4.2": ["1. Factorisation roots","2. Solve problems from Example 1","3. Two numbers sum 27, prod 182","4. Consecutive integers sum of squares 365","5. Right triangle altitude/base","6. Cottage industry pottery"],
+                "Exercise 4.3": ["1. Completing square method","2. Quadratic formula roots","3. Roots of x - 1/x = 3...","4. Rehman's age problem","5. Shefali marks problem","6. Rectangular field diagonal","7. Difference of squares of two numbers","8. Train speed problem","9. Water taps problem","10. Express train time","11. Sum of area of two squares"],
+                "Exercise 4.4": ["1. Nature of roots","2. Find k for equal roots","3. Mango grove design","4. Age situation check","5. Park design check"]
+            },
+            "Chapter 5: Arithmetic Progressions": {
+                "Exercise 5.1": ["1. Situations checking AP","2. Write terms given a & d","3. Find a & d","4. Which are APs?"],
+                "Exercise 5.2": ["1. Use a_n = a+(n-1)d table","2. Choose correct option","3. Find missing terms in boxes","4. Which term is 78?","5. Find number of terms","6. Check if -150 is a term","7. Find 31st term","8. AP consists of 50 terms...","9. 3rd and 9th terms are 4 and -8","10. 17th term exceeds 10th by 7","11. Term 132 more than 54th term","12. Same common difference between two APs","13. 3-digit numbers divisible by 7","14. Multiples of 4 between 10 and 250","15. Value of n for which n-th terms are equal","16. Determine AP with 3rd term 16...","17. 20th term from last","18. Sum of 4th and 8th terms...","19. Subba Rao salary","20. Ramkali saving problem"],
+                "Exercise 5.3": ["1. Sum of AP","2. Find sums given in expressions","3. Find a, d, n, S_n, etc.","4. How many terms to give sum 636?","5. First term 5, last 45...","6. First and last terms 17 and 350...","7. Sum of first 22 terms...","8. Sum of first 51 terms...","9. Sum of first 7 terms is 49...","10. Show a_n forms an AP...","11. Sum of first n terms is 4n - n^2...","12. Sum of first 40 positive integers divisible by 6","13. Sum of first 15 multiples of 8","14. Sum of odd numbers between 0 and 50","15. Construction job penalty","16. Seven cash prizes","17. School tree planting","18. Spiral made of semicircles","19. 200 logs stacking","20. Potato race distance"],
+                "Exercise 5.4 (Optional)": ["1. First negative term","2. Sum of 3rd and 7th terms...","3. Ladder rungs","4. Row of houses","5. Terrace with 15 steps"]
+            },
+            "Chapter 6: Triangles": { 
+                "Exercise 6.1": ["1. Fill in the blanks","2. Similar figures examples","3. State whether similar"],
+                "Exercise 6.2": ["1. Find EC and AD","2. E and F points","3. Prove AM/AB = AN/AD","4. Prove BF/FE = BE/EC","5. Prove EF || QR","6. Prove BC || QR","7. Use Theorem 6.1","8. Use Theorem 6.2","9. Trapezium ABCD","10. Diagonals intersection"],
+                "Exercise 6.3": ["1. Criteria check","2. Angles find","3. Diagonals AC/BD","4. Prove ∆PQS ~ ∆TQR","5. S and T points","6. ∆ABE ≅ ∆ACD","7. Altitudes intersection","8. E on side AD","9. Right triangles ABC/AMP","10. CD and GH bisectors","11. E on side CB","12. Sides AB, BC median AD","13. D on BC","14. Median AD ratio","15. Vertical pole shadow","16. Median AD and PM"],
+                "Exercise 6.4": ["1. Area ∆DEF","2. Diagonals trapezium","3. Same base BC","4. Areas equal","5. Midpoints ratio","6. Ratio areas","7. Equilateral triangle","8. Ratio areas BDE","9. Ratio 4:9"],
+                "Exercise 6.5": ["1. Right triangles","2. PQR right at P","3. ABD right at A","4. ABC isosceles","5. AC=BC","6. Equilateral side 2a","7. Rhombus squares","8. Point O in interior","9. Ladder 10m","10. Guy wire 18m","11. Planes leaving","12. Poles 6m/11m","13. D and E points","14. Perpendicular AD","15. Equilateral BD=1/3BC","16. Side/Altitude relation","17. Multiple choice"],
+                "Exercise 6.6 (Optional)": ["1. Bisector","2. Perpendicular D","3. ∠ABC > 90","4. ∠ABC < 90","5. Median AD","6. Diagonals parallelogram","7. Chords AB/CD","8. Chords produced","9. BD/CD = AB/AC","10. Nazima fly-fishing"]
+            },
+            "Chapter 7: Coordinate Geometry": { 
+                "Exercise 7.1": ["1. Distance formula","2. Distance origin","3. Collinear check","4. Isosceles check","5. Classroom problem","6. Quadrilateral type","7. Point on x-axis","8. Value of y","9. Point Q equidistant","10. x and y relation"],
+                "Exercise 7.2": ["1. Division point","2. Trisection","3. Sports day flags","4. Ratio find","5. x-axis ratio","6. Parallelogram x,y","7. Point A center","8. Point P ratio","9. 4 parts division","10. Rhombus area"],
+                "Exercise 7.3": ["1. Area triangle","2. k for collinear","3. Midpoint triangle","4. Area quadrilateral","5. Median property"],
+                "Exercise 7.4 (Optional)": ["1. Line 2x+y-4=0","2. (x,y) collinear","3. Center of circle","4. Opposite vertices square","5. Rectangular plot","6. Median AD vertices","7. Centroid G","8. Rectangle ABCD"]
+            },
+            "Chapter 8: Trigonometry": { 
+                "Exercise 8.1": ["1. Sin/Cos ratios","2. Tan P - Cot R","3. Sin A = 3/4","4. 15 cot A = 8","5. Sec θ = 13/12","6. Cos A = Cos B","7. Cot θ = 7/8","8. 3 cot A = 4 check","9. Tan A = 1/√3","10. PR + QR = 25","11. True/False"],
+                "Exercise 8.2": ["1. Values evaluate","2. MCQs justify","3. Tan (A+B) = √3","4. True/False"],
+                "Exercise 8.3": ["1. Complementary","2. Show tan 48...","3. Tan 2A = cot(A-18)","4. Tan A = cot B","5. Sec 4A = cosec(A-20)","6. Interior angles","7. Range 0-45"],
+                "Exercise 8.4": ["1. Terms of cot A","2. Terms of sec A","3. Sin/Cos squares","4. MCQ Identities","5. Prove identities (i)-(x)"]
+            },
+            "Chapter 9: Heights & Distances": { 
+                "Exercise 9.1": ["1. Circus artist","2. Tree break","3. Two slides","4. Tower 30m away","5. Kite 60m height","6. 1.5m tall boy","7. Point on ground","8. Statue 1.6m","9. Building from tower","10. Two poles 80m road","11. TV tower canal","12. 7m building/tower","13. Lighthouse 75m","14. 1.2m girl balloon","15. Highway tower","16. Elevation 4m/9m"]
+            },
+            "Chapter 10: Circles": { 
+                "Exercise 10.1": ["1. Tangents count","2. Fill blanks","3. PQ radius 5m","4. Draw circle"],
+                "Exercise 10.2": ["1. Tangent 24cm","2. ∠POQ = 110","3. Inclination 80","4. Parallel tangents","5. Contact point","6. Distance 5cm","7. Concentric 5cm/3cm","8. Circumscribe circle","9. XY/X'Y' parallel","10. Supplementary angle","11. Rhombus proof","12. Triangle radius 4cm","13. Opposite sides"]
+            },
+            "Chapter 11: Constructions": { 
+                "Exercise 11.1": ["1. Line 7.6cm ratio 5:8","2. Similar triangle 2/3","3. Ratio 7/5","4. Isosceles construction","5. BC=6cm, AB=5cm","6. BC=7cm, ∠B=45","7. Right triangle 4cm/3cm"],
+                "Exercise 11.2": ["1. Radius 6cm tangents","2. Concentric 4cm/6cm","3. Points P and Q","4. Inclination 60","5. Segment AB 8cm","6. Right triangle AB=6, BC=8","7. Bangle circle"]
+            },
+            "Chapter 12: Areas of Circles": { 
+                "Exercise 12.1": ["1. Radii 19/9","2. Radii 8/6","3. Archery target","4. Car wheels 80cm","5. Perimeter=Area"],
+                "Exercise 12.2": ["1. Sector 60","2. Quadrant 22cm","3. Minute hand 5 min","4. Chord 10cm","5. Radius 21cm 60","6. Radius 15cm 60","7. Radius 12cm 120","8. Horse tied","9. Silver brooch","10. Umbrella 8 ribs","11. Car wipers","12. Lighthouse","13. Table cover design","14. MCQs"],
+                "Exercise 12.3": ["1. Shaded region semi","2. Concentric circle","3. Square/Semicircles","4. Triangle/Circle","5. Quadrants/Square","6. Circular table","7. 4 circles/Square","8. Racing track","9. Circles in circle","10. Equilateral triangle","11. Handkerchiefs","12. OACB quadrant","13. Square in quadrant","14. Arcs of circles","15. Quadrant/Semicircle","16. Two quadrants"]
+            },
+            "Chapter 13: Surface Areas": { 
+                "Exercise 13.1": ["1. 2 cubes joined","2. Vessel hemisphere","3. Cone on hemisphere","4. Cubical block","5. Hemispherical cut","6. Medicine capsule","7. Tent cylinder","8. Solid cylinder","9. Wooden article"],
+                "Exercise 13.2": ["1. Cone on hemisphere","2. Engineering model","3. Gulab jamun","4. Pen stand","5. Inverted cone","6. Iron pole","7. Solid cone/hemi","8. Glass vessel"],
+                "Exercise 13.3": ["1. Sphere to cylinder","2. 3 spheres melted","3. 20m deep well","4. Well 3m diameter","5. Ice cream cylinder","6. Silver coins","7. Bucket 32cm","8. Canal 6m wide","9. Farmer tank pipe"],
+                "Exercise 13.4": ["1. Drinking glass","2. Slant height 4cm","3. Fez cap","4. Metal container","5. Metallic cone cut"],
+                "Exercise 13.5 (Optional)": ["1. Copper wire","2. Right triangle 3/4","3. Cistern","4. Rainfall 10cm","5. Tin for oil","6. Slant height","7. Temple model"]
+            },
+            "Chapter 14: Statistics": { 
+                "Exercise 14.1": ["1. Plants per house","2. Daily wages","3. Missing frequency f","4. Heart beats","5. Mango crates","6. Food expenditure","7. Concentration SO2","8. Days absent","9. Literacy rate"],
+                "Exercise 14.2": ["1. Mode ages","2. Mode lifetimes","3. Modal expenditure","4. Mode ratio","5. Mode runs","6. Mode cars"],
+                "Exercise 14.3": ["1. Median/Mean/Mode","2. x and y if 28.5","3. Policy age median","4. Median 40 leaves","5. Median neon lamps","6. Median surnames","7. Median weight"],
+                "Exercise 14.4": ["1. Less than type","2. Weights ogive","3. More than type"]
+            },
+            "Chapter 15: Probability": { 
+                "Exercise 15.1": ["1. Theory fill blanks","2. Equally likely","3. Tossing coin","4. Invalid prob","5. P(not E)","6. Lemon candies","7. Birthday prob","8. 3 red 5 black","9. Marbles box","10. Piggy bank","11. Gopi fish","12. Game of chance","13. Die throw","14. Deck 52 cards","15. 5 cards jack/ace","16. 12 defective pens","17. 20 bulbs 4 def","18. Discs 1 to 90","19. Die with letters","20. Die on rectangle","21. Lot 144 pens","22. Sum 2 dice","23. 3 coins toss","24. Die twice","25. Argument check"],
+                "Exercise 15.2 (Optional)": ["1. Shyam and Ekta","2. Faces 1,2,2,3,3,6","3. 5 red some blue","4. 12 balls x black","5. 24 marbles jar"]
+            }
+        };
+
+        const DB_KEY = 'MathPortal_Final_Sync';
+        let currentUser = null, currentPass = null;
+
+        function getDB() { return JSON.parse(localStorage.getItem(DB_KEY)) || { requests: [] }; }
+        function saveDB(data) { localStorage.setItem(DB_KEY, JSON.stringify(data)); }
+
+        function switchView(id) {
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            const icon = document.getElementById('facultyIcon');
+            icon.style.display = (id === 'landingView') ? 'flex' : 'none';
+            if(id === 'dashboardView') { populateChapters(); renderUserHistory(); }
+            if(id === 'adminView') renderAdminTasks();
+            window.scrollTo(0, 0);
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            currentUser = document.getElementById('userName').value.trim();
+            currentPass = document.getElementById('userPass').value;
+            document.getElementById('welcomeMsg').innerText = "Student: " + currentUser;
+            switchView('dashboardView');
+        }
+
+        function populateChapters() {
+            const chapS = document.getElementById('chapterSelect');
+            chapS.innerHTML = '<option value="" disabled selected>Select Chapter</option>';
+            Object.keys(ncertDatabase).forEach(chap => chapS.add(new Option(chap, chap)));
+        }
+
+        function loadExercises() {
+            const chap = document.getElementById('chapterSelect').value;
+            const exS = document.getElementById('exSelect');
+            exS.innerHTML = '<option value="" disabled selected>Select Exercise</option>';
+            if(ncertDatabase[chap]) Object.keys(ncertDatabase[chap]).forEach(ex => exS.add(new Option(ex, ex)));
+        }
+
+        function loadQuestions() {
+            const chap = document.getElementById('chapterSelect').value;
+            const ex = document.getElementById('exSelect').value;
+            const qS = document.getElementById('qSelect');
+            qS.innerHTML = '<option value="" disabled selected>Select Question Number</option>';
+            if(ncertDatabase[chap][ex]) ncertDatabase[chap][ex].forEach((q, i) => qS.add(new Option(`Question ${i+1}`, i)));
+        }
+
+        function showPreview() {
+            const chap = document.getElementById('chapterSelect').value;
+            const ex = document.getElementById('exSelect').value;
+            const qIdx = document.getElementById('qSelect').value;
+            document.getElementById('previewBox').classList.remove('hidden');
+            document.getElementById('qLabelDisplay').innerText = `${ex} - Q${parseInt(qIdx)+1}`;
+            document.getElementById('previewContent').innerText = ncertDatabase[chap][ex][qIdx];
+        }
+
+        function handleStudentSubmit(e) {
+            e.preventDefault();
+            const chap = document.getElementById('chapterSelect').value;
+            const ex = document.getElementById('exSelect').value;
+            const qIdx = document.getElementById('qSelect').value;
+            const qText = ncertDatabase[chap][ex][qIdx];
+            let db = getDB();
+            db.requests.push({
+                id: Date.now(), user: currentUser, pass: currentPass,
+                chapter: chap, exercise: ex, qNum: parseInt(qIdx) + 1,
+                question: qText, solution: null, solImage: null
+            });
+            saveDB(db);
+            document.getElementById('statusArea').innerText = "Request sent. Waiting for Faculty...";
+            startStatusCheck(Date.now());
+        }
+
+        function renderAdminTasks() {
+            const container = document.getElementById('pendingQuestions');
+            const db = getDB();
+            const pending = db.requests.filter(r => !r.solution && !r.solImage);
+            container.innerHTML = pending.length === 0 ? "<p style='color:var(--text-dim)'>No pending requests.</p>" : "";
+            pending.forEach(req => {
+                const div = document.createElement('div');
+                div.className = "admin-item";
+                div.innerHTML = `
+                    <div style="margin-bottom:10px;"><span class="badge" style="background:var(--gold); color:var(--bg-dark)">${req.user}</span> <strong style="color:var(--accent)">${req.chapter}</strong> | <strong style="color:var(--success)">${req.exercise}</strong></div>
+                    <p style="font-size:13px; color:#ccc; margin-bottom:10px;">Q${req.qNum}: ${req.question}</p>
+                    <textarea id="sol-${req.id}" placeholder="Write solution..."></textarea>
+                    <input type="file" id="img-${req.id}" style="margin:10px 0; font-size:11px;" accept="image/*">
+                    <button class="main-btn" onclick="publishSolution(${req.id})">Publish</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function publishSolution(id) {
+            const solText = document.getElementById(`sol-${id}`).value;
+            const fileInput = document.getElementById(`img-${id}`);
+            const saveProcess = (imgData = null) => {
+                let db = getDB();
+                const idx = db.requests.findIndex(r => r.id === id);
+                if(idx !== -1) {
+                    db.requests[idx].solution = solText || "Solution provided.";
+                    db.requests[idx].solImage = imgData;
+                    saveDB(db); alert("Done!"); renderAdminTasks();
+                }
+            };
+            if (fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => saveProcess(e.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else saveProcess();
+        }
+
+        function renderUserHistory() {
+            const db = getDB();
+            const mySolved = db.requests.filter(r => r.user === currentUser && r.pass === currentPass && (r.solution || r.solImage));
+            if(mySolved.length > 0) {
+                document.getElementById('userHistory').classList.remove('hidden');
+                const list = document.getElementById('historyList');
+                list.innerHTML = "";
+                mySolved.forEach(item => {
+                    const d = document.createElement('div');
+                    d.className = "history-item";
+                    d.innerHTML = `<strong>${item.chapter} - ${item.exercise}</strong><br><span style="font-size:11px; color:var(--text-dim);">Q${item.qNum}: ${item.question.substring(0, 30)}...</span>`;
+                    d.onclick = () => showSolution(item.solution, item.solImage);
+                    list.appendChild(d);
+                });
+            }
+        }
+
+        function startStatusCheck(id) {
+            const timer = setInterval(() => {
+                const db = getDB();
+                const req = db.requests.find(r => r.id >= id && (r.solution || r.solImage));
+                if(req) { showSolution(req.solution, req.solImage); clearInterval(timer); }
+            }, 3000);
+        }
+
+        function showSolution(text, img) {
+            document.getElementById('statusArea').innerText = "";
+            document.getElementById('solutionDisplay').classList.remove('hidden');
+            document.getElementById('solutionText').innerText = text;
+            document.getElementById('solutionImageContainer').innerHTML = img ? `<img src="${img}" class="sol-img">` : "";
+            renderUserHistory();
+        }
+
+        function showAdmin() { if(prompt("Faculty Key:") === "1445") switchView('adminView'); }
+    </script>
+</body>
+</html>
